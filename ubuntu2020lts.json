@@ -1,0 +1,233 @@
+{
+  "variables": {
+    "name": "{{ env `TF_VAR_image_deployment_name` }}",
+    "build_name": "{{ env `TF_VAR_build_name` }}",
+    "build_cpu_cores": "{{ env `TF_VAR_build_cpu_cores` }}",
+    "build_memory": "{{ env `TF_VAR_build_memory` }}",
+    "cpu_cores": "{{ env `TF_VAR_cpu_cores` }}",
+    "memory": "{{ env `TF_VAR_memory` }}",
+    "disk_size": "{{ env `TF_VAR_disk_size` }}",
+    "iso_checksum": "{{ env `TF_VAR_iso_checksum` }}",
+    "iso_checksum_type": "{{ env `TF_VAR_iso_checksum_type` }}",
+    "iso_url": "{{ env `TF_VAR_iso_url` }}",
+    "guest_additions_url": "{{ env `TF_VAR_guest_additions_url` }}",
+    "guest_additions_sha256": "{{ env `TF_VAR_guest_additions_sha256` }}",
+    "cloud_token": "{{ env `TF_VAR_vagrant_cloud_token` }}",
+    "remote_user": "{{ env `TF_VAR_esx_user` }}",
+    "remote_password": "{{ env `TF_VAR_esx_password` }}",
+    "remote_esx_host": "{{ env `TF_VAR_remote_esx_host` }}",
+    "remote_vcentre_host": "{{ env `TF_VAR_remote_vcentre_host` }}",
+    "host": "{{ env `TF_VAR_remote_vcentre_host` }}",
+    "remote_type": "{{ env `TF_VAR_remote_type` }}",
+    "remote_vcentre_user": "{{ env `TF_VAR_vcentre_user` }}",
+    "remote_vcentre_password": "{{ env `TF_VAR_vcentre_password` }}",
+    "linux": "/install/linux",
+    "ssh_username": "vagrant",
+    "ssh_password": "vagrant",
+    "version": "0.0.{{timestamp}}"
+  },
+  "builders": [
+    {
+      "type": "vmware-iso",
+      "name": "{{ user `build_name` }}-vmware",
+      "ssh_pty": true,
+      "boot_wait": "10s",
+      "disk_size": "{{user `disk_size`}}",
+      "disk_type_id": "thin",
+      "skip_compaction": true,
+      "skip_export": true,
+      "keep_registered": true,
+      "guest_os_type": "ubuntu-64",
+      "iso_urls": [
+        "iso/ubuntu-20.04-legacy-server-amd64.iso",
+        "http://cdimage.ubuntu.com/ubuntu-legacy-server/releases/20.04/release/ubuntu-20.04-legacy-server-amd64.iso"
+      ],
+      "iso_checksum_type": "sha256",
+      "iso_checksum": "36f15879bd9dfd061cd588620a164a82972663fdd148cce1f70d57d314c21b73",
+      "ssh_username": "{{user `ssh_username`}}",
+      "ssh_password": "{{user `ssh_password`}}",
+      "ssh_port": 22,
+      "ssh_wait_timeout": "10000s",
+      "shutdown_command": "sudo /sbin/shutdown -h now",
+      "remote_type": "{{user `remote_type`}}",
+      "remote_host": "{{user `remote_esx_host`}}",
+      "remote_username": "{{user `remote_user`}}",
+      "remote_password": "{{user `remote_password`}}",
+      "remote_datastore": "IntelDS2",
+      "vnc_disable_password": true,
+      "output_directory": "{{ user `build_name` }}-vmware",
+      "vm_name": "{{ user `build_name` }}",
+      "vmx_data": {
+        "ethernet0.present": "TRUE",
+        "ethernet0.networkName": "VM Network",
+        "ethernet0.wakeOnPcktRcv": "FALSE",
+        "ethernet0.addressType": "generated",
+        "remotedisplay.vnc.enabled": "TRUE",
+        "vhv.enable": "TRUE"
+      },
+      "http_directory": "http",
+      "headless": "{{user `headless`}}",
+      "boot_command": [
+        "<esc><wait>",
+        "<esc><wait>",
+        "<enter><wait>",
+        "/install/vmlinuz<wait>",
+        " initrd=/install/initrd.gz",
+        " auto-install/enable=true",
+        " debconf/priority=critical",
+        " preseed/url=http://{{ .HTTPIP }}:{{ .HTTPPort }}/preseed.cfg<wait>",
+        " -- <wait>",
+        "<enter><wait>"
+      ]
+    },
+    {
+      "type": "virtualbox-iso",
+      "vm_name": "{{ user `build_name` }}",
+      "output_directory": "{{ user `build_name` }}-vbox",
+      "boot_command": [
+        "<esc><wait>",
+        "<esc><wait>",
+        "<enter><wait>",
+        "/install/vmlinuz<wait>",
+        " initrd=/install/initrd.gz",
+        " auto-install/enable=true",
+        " debconf/priority=critical",
+        " preseed/url=http://{{ .HTTPIP }}:{{ .HTTPPort }}/preseed.cfg<wait>",
+        " -- <wait>",
+        "<enter><wait>"
+      ],
+      "boot_wait": "10s",
+      "disk_size": "{{user `disk_size`}}",
+      "guest_os_type": "Ubuntu_64",
+      "headless": "true",
+      "http_directory": "http",
+      "name": "{{ user `build_name` }}-vbox",
+      "iso_urls": [
+        "iso/ubuntu-20.04-legacy-server-amd64.iso",
+        "http://cdimage.ubuntu.com/ubuntu-legacy-server/releases/20.04/release/ubuntu-20.04-legacy-server-amd64.iso"
+      ],
+      "iso_checksum_type": "sha256",
+      "iso_checksum": "36f15879bd9dfd061cd588620a164a82972663fdd148cce1f70d57d314c21b73",
+      "guest_additions_url": "{{user `guest_additions_url`}}",
+      "guest_additions_sha256": "{{user `guest_additions_sha256`}}",
+      "shutdown_command": "echo 'vagrant' | sudo -S poweroff",
+      "ssh_password": "{{user `ssh_username`}}",
+      "ssh_username": "{{user `ssh_password`}}",
+      "ssh_wait_timeout": "20m",
+      "vboxmanage": [
+        [
+          "modifyvm",
+          "{{.Name}}",
+          "--memory",
+          "{{user `build_memory`}}"
+        ],
+        [
+          "modifyvm",
+          "{{.Name}}",
+          "--cpus",
+          "{{user `build_cpu_cores`}}"
+        ]
+      ],
+      "vboxmanage_post": [
+        [
+          "modifyvm",
+          "{{.Name}}",
+          "--memory",
+          "{{user `memory`}}"
+        ],
+        [
+          "modifyvm",
+          "{{.Name}}",
+          "--cpus",
+          "{{user `cpu_cores`}}"
+        ]
+      ],
+      "virtualbox_version_file": ".vbox_version"
+    }
+  ],
+  "provisioners": [
+    {
+      "inline": [
+        "sudo mkdir -p /usr/local/bootstrap && sudo chmod 777 /usr/local/bootstrap"
+      ],
+      "type": "shell",
+      "execute_command": "echo 'vagrant' | {{.Vars}} sudo -E -S bash '{{.Path}}'",
+      "only": ["{{ user `build_name` }}-vmware","{{ user `build_name` }}-vbox"]
+    },
+    {
+      "destination": "/usr/local/bootstrap/",
+      "source": "var.env",
+      "type": "file",
+      "only": ["{{ user `build_name` }}-vmware","{{ user `build_name` }}-vbox"]
+    },
+    {
+      "destination": "/usr/local/bootstrap",
+      "source": "scripts",
+      "type": "file",
+      "only": ["{{ user `build_name` }}-vmware","{{ user `build_name` }}-vbox"]
+    }, 
+    {
+      "execute_command": "echo 'vagrant' | {{.Vars}} sudo -E -S bash '{{.Path}}'",
+      "scripts": [
+        "scripts/packer_install_base_packages.sh",
+        "scripts/packer_configure_vagrant_user.sh",
+        "scripts/packer_install_guest_additions.sh"
+      ],
+      "type": "shell",
+      "expect_disconnect": true,
+      "pause_before": "10s",
+      "only": ["{{ user `build_name` }}-vbox"]
+    },
+    {
+      "execute_command": "echo 'vagrant' | {{.Vars}} sudo -E -S bash '{{.Path}}'",
+      "scripts": [
+        "scripts/packer_install_base_packages.sh",
+        "scripts/packer_configure_vagrant_user.sh",
+        "scripts/packer_install_vmtools.sh"
+      ],
+      "type": "shell",
+      "expect_disconnect": true,
+      "pause_before": "10s",
+      "only": ["{{ user `build_name` }}-vmware"]
+    },
+    {
+      "execute_command": "echo 'vagrant' | {{.Vars}} sudo -E -S bash '{{.Path}}'",
+      "scripts": [
+        "scripts/packer_box_cleanup.sh"
+      ],
+      "type": "shell",
+      "expect_disconnect": true,
+      "pause_before": "10s"
+    },
+    {
+      "type": "inspec",
+      "profile": "test/ImageBuild-Packer-Test"
+    }
+  ],
+  "post-processors": [
+      [
+        {
+          "type": "vagrant",
+          "keep_input_artifact": true,
+          "output": "{{.BuildName}}.box",
+          "only": ["{{ user `build_name` }}-vbox"]
+        },
+        {
+          "type": "vagrant-cloud",
+          "box_tag": "{{user `name`}}",
+          "access_token": "{{user `cloud_token`}}",
+          "version": "{{user `version`}}",
+          "only": ["{{ user `build_name` }}-vbox"]
+        }
+      ],
+      {
+        "type": "vsphere-template",
+        "host": "{{user `remote_vcentre_host`}}",
+        "insecure": true,
+        "username": "{{user `remote_vcentre_user`}}",
+        "password": "{{user `remote_vcentre_password`}}",
+        "folder": "/packer_templates/wpc",
+        "only": ["{{ user `build_name` }}-vmware"]
+     }
+  ]
+}

@@ -1,0 +1,9 @@
+/packer_cache/
+/output-*/*
+*.box
+*.iso
+*.lock
+.vagrant
+.DS_Store
+*vbox
+*vbox/*
