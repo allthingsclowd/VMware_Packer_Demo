@@ -55,36 +55,36 @@ wip...To BE CONTINUED add links to the official training up top....
 # Example Source File Template
 
 ``` bash
-export VAGRANT_CLOUD_TOKEN=PYYuyWOgb4wokw.atlasv1.FpfSIFW0S07zSCr4QbCI4zo2jEdR9vqu7gC83zAhnDhKaWzAxZJsH9BEGvYY8iDxBRw
-export TF_VAR_vagrant_cloud_token=PYYuyWOgb4wokw.atlasv1.FpfSIFW0S07zSCr4QbCI4zo2jEdR9vqu7gC83zAhnDhKaWzAxZJsH9BEGvYY8iDxBRw
+export VAGRANT_CLOUD_TOKEN=
+export TF_VAR_vagrant_cloud_token=
 
 echo Loading VMware Account Details for Terraform
 export TF_VAR_vcentre_user="PackerforESXi@vsphere.local"
-export TF_VAR_vcentre_password="F;YDTuRu9io8a-8R"
+export TF_VAR_vcentre_password=""
 export TF_VAR_vsphere_user="PackerforESXi@vsphere.local"
-export TF_VAR_vsphere_password="F;YDTuRu9io8a-8R"
+export TF_VAR_vsphere_password=""
 export TF_VAR_remote_user="PackerforESXi@vsphere.local"
-export TF_VAR_remote_password="F;YDTuRu9io8a-8R"
+export TF_VAR_remote_password=""
 export TF_VAR_vsphere_server="192.168.2.98"
 export TF_VAR_vmware_user="packerforesx"
-export TF_VAR_vmware_password="YofBPl04>DX2ZA^L"
+export TF_VAR_vmware_password=""
 export TF_VAR_ssh_certificate=/Users/grazzer/.ssh/id_rsa-cert.pub
 export TF_VAR_ssh_host_key=/Users/grazzer/.ssh/iac4me_host-ca.pub
 
 export TF_VAR_remote_esx_host="192.168.2.99"
 export TF_VAR_esx_user="packerforesx"
-export TF_VAR_esx_password="YofBPl04>DX2ZA^L"
+export TF_VAR_esx_password=""
 export TF_VAR_remote_vcentre_host="192.168.2.98"
 export TF_VAR_vcentre_user="PackerforESXi@vsphere.local"
-export TF_VAR_vcentre_password="F;YDTuRu9io8a-8R"
+export TF_VAR_vcentre_password=""
 export TF_VAR_remote_type="esx5"
 
 export TF_VAR_bastion_host_key=/Users/grazzer/.ssh/iac4me_id_rsa-cert.pub
 export TF_VAR_bastion_certificate=/Users/grazzer/.ssh/iac4me_host-ca.pub
 export TF_VAR_bastion_private_key=/Users/grazzer/.ssh/iac4me_id_rsa
 export TF_VAR_bastion_user="iac4me"
-export TF_VAR_bastion_port="9999"
-export TF_VAR_bastion_host="81.143.215.2"
+export TF_VAR_bastion_port=""
+export TF_VAR_bastion_host=""
 export TF_VAR_ssh_certificate=/Users/grazzer/.ssh/iac4me_id_rsa-cert.pub
 export TF_VAR_ssh_private_key=/Users/grazzer/.ssh/iac4me_id_rsa
 export TF_VAR_ssh_username="iac4me"
