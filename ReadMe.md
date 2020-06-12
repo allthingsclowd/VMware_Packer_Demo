@@ -89,3 +89,5 @@ export TF_VAR_ssh_certificate=/Users/grazzer/.ssh/iac4me_id_rsa-cert.pub
 export TF_VAR_ssh_private_key=/Users/grazzer/.ssh/iac4me_id_rsa
 export TF_VAR_ssh_username="iac4me"
 ```
+
+When running a packer build
